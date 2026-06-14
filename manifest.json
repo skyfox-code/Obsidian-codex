@@ -5,6 +5,5 @@
   "minAppVersion": "0.15.0",
   "description": "Read CBZ comics, EPUB books, and PDF documents inside Obsidian.",
   "author": "IDK",
-  "authorUrl": "",
-  "isDesktopOnly": true
+  "isDesktopOnly": false
 }

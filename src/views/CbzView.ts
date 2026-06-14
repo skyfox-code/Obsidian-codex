@@ -20,6 +20,14 @@ export class CbzView extends FileView {
   private dragOriginX = 0;
   private dragOriginY = 0;
 
+  // touch state
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private touchLastX = 0;
+  private touchLastY = 0;
+  private touchStartDist = 0;
+  private touchStartScale = 1;
+
   // DOM nodes
   private container!: HTMLElement;
   private canvas!: HTMLElement;
@@ -205,6 +213,57 @@ export class CbzView extends FileView {
         case 'Escape': this.resetZoom(); this.applyTransform(); break;
       }
     });
+
+    this.bindTouchEvents();
+  }
+
+  private bindTouchEvents() {
+    this.registerDomEvent(this.container, 'touchstart', (e: TouchEvent) => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        this.touchStartX = this.touchLastX = e.touches[0].clientX;
+        this.touchStartY = this.touchLastY = e.touches[0].clientY;
+      } else if (e.touches.length === 2) {
+        this.touchStartDist = this.pinchDist(e.touches);
+        this.touchStartScale = this.scale;
+      }
+    }, { passive: false });
+
+    this.registerDomEvent(this.container, 'touchmove', (e: TouchEvent) => {
+      e.preventDefault();
+      if (e.touches.length === 1 && this.scale > 1) {
+        const dx = e.touches[0].clientX - this.touchLastX;
+        const dy = e.touches[0].clientY - this.touchLastY;
+        this.touchLastX = e.touches[0].clientX;
+        this.touchLastY = e.touches[0].clientY;
+        this.tx += dx;
+        this.ty += dy;
+        this.applyTransform();
+      } else if (e.touches.length === 2) {
+        const dist = this.pinchDist(e.touches);
+        this.scale = Math.max(0.25, Math.min(10, this.touchStartScale * (dist / this.touchStartDist)));
+        this.applyTransform();
+      }
+    }, { passive: false });
+
+    this.registerDomEvent(this.container, 'touchend', (e: TouchEvent) => {
+      if (e.changedTouches.length === 1 && e.touches.length === 0) {
+        const dx = e.changedTouches[0].clientX - this.touchStartX;
+        const dy = e.changedTouches[0].clientY - this.touchStartY;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && this.scale <= 1) {
+          dx < 0 ? this.step(this.rtl ? -1 : 1) : this.step(this.rtl ? 1 : -1);
+        } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+          this.flashOverlay();
+        }
+      }
+    });
+  }
+
+  private pinchDist(touches: TouchList): number {
+    return Math.hypot(
+      touches[1].clientX - touches[0].clientX,
+      touches[1].clientY - touches[0].clientY
+    );
   }
 
   private flashOverlay() {
