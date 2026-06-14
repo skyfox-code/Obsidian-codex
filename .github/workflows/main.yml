@@ -1,0 +1,25 @@
+name: Package Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build release zip
+        run: |
+          mkdir Obsidian-codex
+          cp -r * Obsidian-codex/ 2>/dev/null || true
+          cp -r .* Obsidian-codex/ 2>/dev/null || true
+          rm -rf Obsidian-codex/.git
+          rm -f Obsidian-codex/README.md Obsidian-codex/readme.md Obsidian-codex/README*
+          zip -r Obsidian-codex.zip Obsidian-codex/
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Obsidian-codex.zip
