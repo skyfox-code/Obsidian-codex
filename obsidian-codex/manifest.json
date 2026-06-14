@@ -1,0 +1,10 @@
+{
+  "id": "obsidian-codex",
+  "name": "Codex",
+  "version": "0.1.0",
+  "minAppVersion": "0.15.0",
+  "description": "Read CBZ comics, EPUB books, and PDF documents inside Obsidian.",
+  "author": "IDK",
+  "authorUrl": "",
+  "isDesktopOnly": true
+}
