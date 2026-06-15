@@ -60,7 +60,6 @@ export class EpubView extends FileView {
     if (this.book) { revokeEpubResources(this.book); this.book = null; }
   }
 
-  // â”€â”€ DOM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   private buildDOM() {
     const wrapper = this.contentEl.createDiv('codex-epub-wrapper');
@@ -69,7 +68,7 @@ export class EpubView extends FileView {
     this.tocSidebar = wrapper.createDiv('codex-toc-sidebar is-collapsed');
     const tocHead = this.tocSidebar.createDiv('codex-toc-header');
     tocHead.createEl('span', { text: 'Contents' });
-    tocHead.createEl('button', { cls: 'codex-toc-close', text: 'âœ•' }).onclick = () => this.toggleToc();
+    tocHead.createEl('button', { cls: 'codex-toc-close', text: 'x' }).onclick = () => this.toggleToc();
     this.tocList = this.tocSidebar.createDiv('codex-toc-list');
 
     // Main reading area
@@ -79,15 +78,15 @@ export class EpubView extends FileView {
     // Floating overlay
     this.overlay = this.contentEl.createDiv('codex-overlay');
 
-    const prev = this.overlay.createEl('button', { cls: 'codex-btn', text: 'â€¹' });
+    const prev = this.overlay.createEl('button', { cls: 'codex-btn', text: '<--' });
     this.chapterLabel = this.overlay.createEl('span', { cls: 'codex-counter' });
-    const next = this.overlay.createEl('button', { cls: 'codex-btn', text: 'â€º' });
+    const next = this.overlay.createEl('button', { cls: 'codex-btn', text: '-->' });
 
     this.overlay.createDiv('codex-sep');
 
-    const tocBtn = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'â˜°', attr: { title: 'Table of contents (T)' } });
-    const fontDec = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'Aâˆ’', attr: { title: 'Decrease font size' } });
-    const fontInc = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'A+', attr: { title: 'Increase font size' } });
+    const tocBtn = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'Index  Page', attr: { title: 'Table of contents (T)' } });
+    const fontDec = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: '+', attr: { title: 'Decrease font size' } });
+    const fontInc = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: '-', attr: { title: 'Increase font size' } });
 
     prev.onclick = () => this.navigate(-1);
     next.onclick = () => this.navigate(1);
@@ -96,8 +95,7 @@ export class EpubView extends FileView {
     fontInc.onclick = () => this.adjustFont(2);
   }
 
-  // â”€â”€ TOC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
+  
   private renderToc() {
     this.tocList.empty();
     if (!this.book) return;
@@ -139,8 +137,7 @@ export class EpubView extends FileView {
     this.tocSidebar.toggleClass('is-collapsed', !this.tocOpen);
   }
 
-  // â”€â”€ Rendering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
+  
   private renderChapter(index: number) {
     if (!this.book) return;
     this.chapterIndex = Math.max(0, Math.min(index, this.book.chapters.length - 1));
@@ -202,7 +199,6 @@ export class EpubView extends FileView {
     }
   }
 
-  // â”€â”€ Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   private bindEvents() {
     this.registerDomEvent(this.contentEl, 'mousemove', () => this.flashOverlay());

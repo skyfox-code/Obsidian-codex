@@ -80,13 +80,13 @@ export class CbzView extends FileView {
 
     this.overlay = this.contentEl.createDiv('codex-overlay');
 
-    const left = this.overlay.createEl('button', { cls: 'codex-btn', text: 'â€¹' });
+    const left = this.overlay.createEl('button', { cls: 'codex-btn', text: '<--' });
     this.pageCounter = this.overlay.createEl('span', { cls: 'codex-counter' });
-    const right = this.overlay.createEl('button', { cls: 'codex-btn', text: 'â€º' });
+    const right = this.overlay.createEl('button', { cls: 'codex-btn', text: '-->' });
 
     this.overlay.createDiv('codex-sep');
 
-    const dbl = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'âŠŸ', attr: { title: 'Double page (D)' } });
+    const dbl = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'Switch Page view', attr: { title: 'Double page (D)' } });
     const rtlBtn = this.overlay.createEl('button', { cls: 'codex-btn codex-btn-sm', text: 'RTL', attr: { title: 'Toggle RTL (R)' } });
 
     left.onclick = () => this.step(this.rtl ? 1 : -1);
